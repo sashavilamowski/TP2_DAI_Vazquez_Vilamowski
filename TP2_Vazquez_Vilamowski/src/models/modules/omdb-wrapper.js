@@ -1,75 +1,51 @@
 import axios from "axios";
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
 
-const APIKEY = "7b62fa5d"; // Coloca aquí tu APIKEY de OMDB, esta es solo un ejemplo
-
+const APIKEY = "5f83fda8"; 
 const OMDBSearchByPage = async (searchText, page = 1) => {
-  try {
-    const response = await axios.get(`https://www.omdbapi.com/?apikey=${APIKEY}&s=${searchText}&page=${page}`);
-    
-    const returnObject = {
-      respuesta: true,
-      cantidadTotal: response.data.totalResults,
-      datos: response.data.Search
-    };
-
-    return returnObject;
-  } catch (error) {
-    console.error("Error al buscar películas por página:", error.response.data.Error);
-    
-    const returnObject = {
-      respuesta: false,
-      cantidadTotal: 0,
-      datos: []
-    };
-
-    return returnObject;
-  }
+let returnObject = {
+respuesta : false,
+cantidadTotal : 0,
+datos : {}
 };
 
+const requestString = `https://www.omdbapi.com/?apikey=${APIKEY}&s=${searchText}&page${page}`;
+const apiResponse = await axios.get(requestString);
+returnObject.datos = apiResponse.data.Search;
+returnObject.cantidadTotal = apiResponse.data.totalresults;
+returnObject.respuesta = apiResponse.data.response
+
+return returnObject;
+};
 const OMDBSearchComplete = async (searchText) => {
-  try {
-    const response = await axios.get(`https://www.omdbapi.com/?apikey=${APIKEY}&s=${searchText}`);
-    
-    const returnObject = {
-      respuesta: true,
-      cantidadTotal: response.data.totalResults,
-      datos: response.data.Search
-    };
-
-    return returnObject;
-  } catch (error) {
-    console.error("Error al buscar películas completas:", error.response.data.Error);
-    
-    const returnObject = {
-      respuesta: false,
-      cantidadTotal: 0,
-      datos: []
-    };
-
-    return returnObject;
-  }
+let returnObject = {
+respuesta : false,
+cantidadTotal : 0,
+datos : {}
 };
 
+const requestString = `https://www.omdbapi.com/?apikey=${APIKEY}&s=${searchText}`;
+const apiResponse = await axios.get(requestString);
+returnObject.datos = apiResponse.data.Search;
+returnObject.cantidadTotal = apiResponse.data.totalresults;
+returnObject.respuesta = apiResponse.data.response
+return returnObject;
+
+};
 const OMDBGetByImdbID = async (imdbID) => {
-  try {
-    const response = await axios.get(`https://www.omdbapi.com/?apikey=${APIKEY}&i=${imdbID}`);
-    
-    const returnObject = {
-      respuesta: true,
-      datos: response.data
-    };
-
-    return returnObject;
-  } catch (error) {
-    console.error("Error al obtener detalles de película por IMDb ID:", error.response.data.Error);
-    
-    const returnObject = {
-      respuesta: false,
-      datos: {}
-    };
-
-    return returnObject;
-  }
+let returnObject = {
+respuesta : false,
+cantidadTotal : 0,
+datos : {}
 };
 
-export { OMDBSearchByPage, OMDBSearchComplete, OMDBGetByImdbID };
+const requestString = `https://www.omdbapi.com/?apikey=${APIKEY}&I${imdbID}`;
+const apiResponse = await axios.get(requestString);
+returnObject.datos = apiResponse.data.Search;
+returnObject.cantidadTotal = apiResponse.data.totalresults;
+returnObject.respuesta = apiResponse.data.response
+
+return returnObject;
+};
+
+export {OMDBSearchByPage, OMDBSearchComplete, OMDBGetByImdbID};
